@@ -1,6 +1,4 @@
-package thread;
-
-import classwork.*;
+package classworkLessonRecordBIGINTDECPolymorphismOpenAndClosable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -57,7 +55,7 @@ public class Main {
 
         System.out.println("Количество строк в Invoice после попытки изменить внешний список: " + secureInvoice.getInvoiceLines().size());
         InvoiceResult secureResult = calculator.calculate(secureInvoice);
-        System.out.println("Итоговая сумма (должна остаться за 1 наушники = 540.00): " + secureResult.total());
+        System.out.println("Итоговая сумма : " + secureResult.total());
     }
 
     private static void printResult(InvoiceResult r) {

@@ -1,10 +1,9 @@
-package classwork;
+package classworkLessonRecordBIGINTDECPolymorphismOpenAndClosable;
 
 import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter

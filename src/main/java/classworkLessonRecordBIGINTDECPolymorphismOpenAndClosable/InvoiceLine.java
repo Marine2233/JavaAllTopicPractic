@@ -1,6 +1,5 @@
-package classwork;
+package classworkLessonRecordBIGINTDECPolymorphismOpenAndClosable;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 

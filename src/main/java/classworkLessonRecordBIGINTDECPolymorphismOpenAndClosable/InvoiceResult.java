@@ -1,4 +1,4 @@
-package classwork;
+package classworkLessonRecordBIGINTDECPolymorphismOpenAndClosable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
