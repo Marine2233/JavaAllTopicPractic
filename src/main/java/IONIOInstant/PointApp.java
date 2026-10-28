@@ -13,31 +13,25 @@ public class PointApp {
         try {
             System.out.println("=== ЗАПУСК ПРИЛОЖЕНИЯ ОБРАБОТКИ ПЛАТЕЖЕЙ ===");
 
-            // 1. Получить путь к входному файлу через Path.of("data", "payments.txt")
             Path inputFile = Path.of("data", "payments.txt");
             ensureInputFileExists(inputFile);
             System.out.println("Шаг 1. Входной файл: " + inputFile.toAbsolutePath());
 
-            // 2. Создать PaymentFileService, PaymentSchedule и PaymentReportService
             PaymentFileService fileService = new PaymentFileService();
             PaymentScheduler scheduler = new PaymentScheduler();
             PaymentReportService reportService = new PaymentReportService(scheduler);
             System.out.println("Шаг 2. Все сервисы успешно инициализированы.");
 
-            // Установка времени для воспроизводимого теста (Шаг 8)
-            // Фиксированный момент времени для сверки с окончательным проверочным набором ТЗ
-            Instant now = Instant.parse("2026-10-22T10:00:00Z");
+           // Instant now = Instant.parse("2026-10-22T10:00:00Z");
 
-            // ПОСЛЕ ПРОВЕРКИ ТЕСТА: раскомментируйте строчку ниже и закомментируйте строчку выше
-            // Instant now = Instant.now();
+
+             Instant now = Instant.now();
 
             System.out.println("Используемая временная метка (UTC): " + now);
 
-            // 3. Прочитать и проверить входные данные
             System.out.println("\nШаг 3. Запуск чтения и валидации данных...");
             ImportResult importResult = fileService.readOrders(inputFile);
 
-            // 4. Вывести количество принятых и отклонённых платежей
             List<PaymentOrder> accepted = importResult.accepted();
             List<ImportError> rejected = importResult.rejected();
 
@@ -49,10 +43,8 @@ public class PointApp {
             System.out.printf("Проверка по ТЗ (Окончательный набор): Ожидается Принято: 4, Отклонено: 4. Фактически: %d и %d%n",
                     accepted.size(), rejected.size());
 
-            // 5. Получить платежи, подлежащие исполнению, через getDueOrders()
             List<PaymentOrder> dueOrders = scheduler.getDueOrders(accepted, now);
 
-            // Считаем распределение статусов для вывода проверочного набора
             long pendingCount = accepted.stream().filter(o -> "PENDING".equals(scheduler.getStatus(o, now))).count();
             long dueCount = dueOrders.size(); // Все due-ордера
             long overdueCount = accepted.stream().filter(o -> "OVERDUE".equals(scheduler.getStatus(o, now))).count();
@@ -62,7 +54,6 @@ public class PointApp {
             System.out.println(" DUE      : " + dueCount);
             System.out.println(" OVERDUE  : " + overdueCount);
 
-            // 6. Сформировать три отчёта в папке output
             Path outputDir = Path.of("output");
             Path fullReportFile = outputDir.resolve("full_report.txt");
             Path duePaymentsFile = outputDir.resolve("due_payments.txt");
@@ -73,19 +64,16 @@ public class PointApp {
             reportService.writeDuePayments(duePaymentsFile, accepted, now);
             reportService.writeErrors(errorsReportFile, rejected);
 
-            // 7. Вывести пути к созданным файлам
             System.out.println("\nШаг 7. Пути к созданным файлам отчетов:");
             System.out.println(" -> Полный отчет: " + fullReportFile.toAbsolutePath());
             System.out.println(" -> Очередь исполнения: " + duePaymentsFile.toAbsolutePath());
             System.out.println(" -> Лог ошибок импорта: " + errorsReportFile.toAbsolutePath());
 
-            // 8. Проверить, что файлы существуют, и вывести их размер через Files.size()
             System.out.println("\nШаг 8. Проверка файловой системы и размеров файлов:");
             printFileInfo(fullReportFile);
             printFileInfo(duePaymentsFile);
             printFileInfo(errorsReportFile);
 
-            // Дополнительное усложнение: Архивация исходного файла
             System.out.println("\n[Дополнительно]. Запуск архивации...");
             Path archiveDir = Path.of("archive");
             try {
@@ -123,10 +111,9 @@ public class PointApp {
         if (Files.notExists(inputFile)) {
             System.out.println("Файл data/payments.txt не найден. Автогенерация тестового набора данных...");
             try (BufferedWriter writer = Files.newBufferedWriter(inputFile, StandardCharsets.UTF_8)) {
-                // Заголовок таблицы
+
                 writer.write("id,client,amount,createdAtUtc,scheduledAt\n");
 
-                // Набор данных (8 строк из ТЗ: 4 корректных, 4 ошибочных)
                 writer.write("P001,Анна,150.00,2026-10-20T08:00:00Z,2026-10-22T12:00:00Z+03:00\n"); // Принят (DUE)
                 writer.write("P002,Иван,2500.50,2026-10-21T09:30:00Z,2026-10-25T15:00:00Z+03:00\n"); // Принят (PENDING)
                 writer.write("P003,Мария,450.00,2026-10-19T14:15:00Z,2026-10-21T10:00:00Z+02:00\n"); // Принят (OVERDUE)
