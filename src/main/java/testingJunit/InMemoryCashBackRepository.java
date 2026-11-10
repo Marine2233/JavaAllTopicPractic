@@ -20,9 +20,9 @@ public class InMemoryCashBackRepository implements CashBackRepository {
     @Override
     public BigDecimal getTotalForMonth(long clientId, YearMonth month) {
         return results.values().stream().
-                filter(purchase-> purchase.purchase().clientId() == clientId && purchase.month().equals(month)).
-                map(CashBackResult::cashbackAmount).
-                reduce(BigDecimal.ZERO,BigDecimal::add);
+                filter(purchase-> purchase.purchase().clientId() == clientId && purchase.month().equals(month))
+                        .map(CashBackResult::cashbackAmount)
+                .reduce(new BigDecimal("0.00"),BigDecimal::add);
     }
 
     @Override

@@ -1,4 +1,4 @@
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import testingJunit.CalculatorCacheBack;
 import testingJunit.Purchase;
@@ -6,11 +6,10 @@ import testingJunit.enums.CardType;
 import testingJunit.enums.PurchaseCategory;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 
-import static junit.framework.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class CalculatorCashBackTest {
 
@@ -28,8 +27,7 @@ public class CalculatorCashBackTest {
                 LocalDate.now());
 
         BigDecimal actual = cacheBack.calculate(purchase);
-        actual.setScale(2, RoundingMode.HALF_EVEN);
-        assertTrue(BigDecimal.valueOf(10.00).compareTo(actual) == 0);
+        assertEquals(new BigDecimal("10.00"),actual);
     }
 
     @Test
@@ -43,7 +41,7 @@ public class CalculatorCashBackTest {
                 LocalDate.now());
 
         BigDecimal actual = cacheBack.calculate(purchase);
-        assertTrue(BigDecimal.valueOf(20).compareTo(actual) == 0);
+        assertEquals(new BigDecimal("20.00"),actual);
 
     }
 

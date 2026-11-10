@@ -21,11 +21,11 @@ public record Purchase(
             throw new IllegalArgumentException("Идентификатор не может быть Null");
         }
 
-        if (clientId < 0){
+        if (clientId <= 0){
             throw new IllegalArgumentException("Id должен быть строго положительный.");
         }
 
-        if (amount.compareTo(BigDecimal.ZERO) < 0){
+        if (amount.compareTo(BigDecimal.ZERO) <= 0){
             throw new IllegalArgumentException("Сумма покупки должна быть больше 0.");
         }
 
@@ -37,7 +37,10 @@ public record Purchase(
             throw new IllegalArgumentException("Дата должна быть задана.");
         }
 
-       amount.setScale(2, RoundingMode.UNNECESSARY);
-
+        try {
+            amount = amount.setScale(2, RoundingMode.UNNECESSARY);
+        }catch (ArithmeticException e){
+            throw new IllegalArgumentException("числа после занятой не больше 2");
+        }
     }
 }

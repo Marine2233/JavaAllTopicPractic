@@ -19,7 +19,7 @@ public record CashBackResult(
             throw new IllegalArgumentException("Невалидная дата.");
         }
 
-        if (cashbackAmount.compareTo(BigDecimal.ZERO) < 0 || cashbackAmount == null){
+        if (cashbackAmount == null || cashbackAmount.compareTo(BigDecimal.ZERO) < 0 ){
             throw new IllegalArgumentException("Кешбек не может быть null");
         }
     }
